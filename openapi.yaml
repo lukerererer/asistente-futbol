@@ -1,0 +1,56 @@
+openapi: 3.0.0
+info:
+  title: Asistente Fútbol AI
+  description: API para analizar partidos y generar predicciones de apuestas
+  version: 1.0.0
+servers:
+  - url: https://asistente-futbol.onrender.com
+paths:
+  /analizar-partido:
+    post:
+      summary: Analiza un partido de fútbol
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                local:
+                  type: string
+                  example: "PSG"
+                visitante:
+                  type: string
+                  example: "Atlético Madrid"
+                fecha:
+                  type: string
+                  format: date
+                  example: "2025-06-15"
+                estadio:
+                  type: string
+                  example: "Rose Bowl"
+      responses:
+        '200':
+          description: Análisis generado exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  analisis:
+                    type: string
+                    example: "PSG y Atlético se enfrentan el..."
+                  apuestas:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        tipo:
+                          type: string
+                          example: "Ambos marcan"
+                        cuota:
+                          type: number
+                          example: 1.72
+                        explicacion:
+                          type: string
+                          example: "Ambos equipos suelen anotar..."

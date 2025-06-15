@@ -1,19 +1,17 @@
-
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
-import requests
+import os
 
 app = Flask(__name__)
 CORS(app)
 
 @app.route('/analizar-partido', methods=['POST'])
 def analizar_partido():
-    data = request.get_json()
-
-    local = data.get("local")
-    visitante = data.get("visitante")
-    fecha = data.get("fecha")
-    estadio = data.get("estadio")
+    datos = request.get_json()
+    local = datos.get('local')
+    visitante = datos.get('visitante')
+    fecha = datos.get('fecha')
+    estadio = datos.get('estadio')
 
     analisis = f"{local} y {visitante} se enfrentan el {fecha} en el estadio {estadio}. Ambos equipos buscarán imponer su estilo."
     apuestas = [
@@ -25,12 +23,12 @@ def analizar_partido():
         {
             "tipo": "Ambos marcan",
             "cuota": 1.72,
-            "explicacion": f"Ambos equipos suelen anotar con regularidad. Esta apuesta es sólida por los antecedentes ofensivos."
+            "explicacion": "Ambos equipos suelen anotar con regularidad. Esta apuesta es sólida por los antecedentes ofensivos."
         },
         {
             "tipo": "Más de 2.5 goles",
             "cuota": 1.90,
-            "explicacion": f"Los partidos recientes entre equipos similares superaron los 2.5 goles. Buen valor en esta cuota."
+            "explicacion": "Los partidos recientes entre equipos similares superaron los 2.5 goles. Buen valor en esta cuota."
         }
     ]
 
@@ -38,6 +36,10 @@ def analizar_partido():
         "analisis": analisis,
         "apuestas": apuestas
     })
+
+@app.route('/openapi.yaml', methods=['GET'])
+def serve_openapi_yaml():
+    return send_from_directory(directory=os.getcwd(), path='openapi.yaml', mimetype='text/yaml')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
